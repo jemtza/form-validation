@@ -1,7 +1,6 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { store } from "./app/store";
+import { store } from "./redux/store";
 import App from "./App";
 
 test("renders learn react link", () => {
@@ -10,6 +9,5 @@ test("renders learn react link", () => {
       <App />
     </Provider>
   );
-
-  expect(screen.getByText(/learn/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
 });
