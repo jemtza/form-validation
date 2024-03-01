@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { addUser } from "../redux/slices/users";
 import { DEFAULT_FORM_DATA, hobbies, roles } from "./consts";
-import { isValidEmail, isValidUsername } from "./helpers";
+import { validateForm } from "./helpers";
 import "./Form.css";
 
 const Form = () => {
@@ -28,27 +28,6 @@ const Form = () => {
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
   const [errors, setErrors] = useState({});
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!isValidUsername(formData.username)) {
-      newErrors.username = "Username should be between 3 and 10 characters.";
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!isValidEmail(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    if (!formData.role) {
-      newErrors.role = "Role is required";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const resetForm = () => {
     setFormData(DEFAULT_FORM_DATA);
@@ -86,12 +65,12 @@ const Form = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const isValid = validateForm();
+    const { isValid, errors } = validateForm(formData);
     if (isValid) {
       setSuccessDialogOpen(true);
-      dispatch(addUser({ ...formData }));
+      dispatch(addUser(formData));
       resetForm();
-    }
+    } else setErrors(errors);
   };
 
   return (
